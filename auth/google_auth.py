@@ -93,24 +93,20 @@ def google_login():
     )
 
 
-    result = (
+    result = oauth.authorize_button(
 
-        oauth.authorize_button(
-
-            "🔵 Continue with Google",
-
-            redirect_uri=
-
-            "http://localhost:8501",
-
-            scope=
-
-            "openid email profile",
-
-            key="google"
-
-        )
-
+        name="🔵 Continue with Google",
+    
+        redirect_uri=
+    
+        "https://financial-expense-tracker.streamlit.app",
+    
+        scope=
+    
+        "openid email profile",
+    
+        key="google"
+    
     )
 
 
