@@ -1,38 +1,29 @@
 import os
 import streamlit as st
 
-from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 
-load_dotenv()
+DATABASE_URL = st.secrets["DATABASE_URL"]
 
 
-DATABASE_URL = (
+# IMPORTANT:
+DATABASE_URL = DATABASE_URL.replace(
 
-    st.secrets["DATABASE_URL"]
+    "postgresql://",
 
-    if "DATABASE_URL"
+    "postgresql+psycopg2://",
 
-    in st.secrets
-
-    else
-
-    os.getenv(
-
-        "DATABASE_URL"
-
-    )
+    1
 
 )
 
 
-print("DATABASE_URL exists:", DATABASE_URL is not None)
-
 engine = create_engine(
 
     DATABASE_URL,
+
 
     connect_args={
 
@@ -41,6 +32,7 @@ engine = create_engine(
         "require"
 
     },
+
 
     pool_pre_ping=True,
 
