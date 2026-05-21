@@ -1,6 +1,6 @@
 import os
 import smtplib
-
+import streamlit as st
 from email.mime.text import MIMEText
 from dotenv import load_dotenv
 
@@ -8,15 +8,42 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-EMAIL = os.getenv(
-    "EMAIL"
+EMAIL = (
+
+    st.secrets.get(
+
+        "EMAIL"
+
+    )
+
+    or
+
+    os.getenv(
+
+        "EMAIL"
+
+    )
+
 )
 
 
-EMAIL_PASSWORD = os.getenv(
-    "EMAIL_PASSWORD"
-)
+EMAIL_PASSWORD = (
 
+    st.secrets.get(
+
+        "EMAIL_PASSWORD"
+
+    )
+
+    or
+
+    os.getenv(
+
+        "EMAIL_PASSWORD"
+
+    )
+
+)
 
 
 def create_monthly_report(
