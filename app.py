@@ -19,12 +19,6 @@ from auth.google_auth import (
 )
 
 
-Base.metadata.create_all(
-
-    bind=engine
-
-)
-
 
 
 def handle_google_login():
