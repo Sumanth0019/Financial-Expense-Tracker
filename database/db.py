@@ -9,11 +9,12 @@ from sqlalchemy.orm import sessionmaker
 load_dotenv()
 
 
-DATABASE_URL =  st.secrets.get(
+DATABASE_URL =  (st.secrets.get(
 
         "DATABASE_URL"
 
     )
+                )
 
 
 print(
