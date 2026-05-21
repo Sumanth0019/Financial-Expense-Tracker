@@ -2,7 +2,6 @@ import os
 import streamlit as st
 
 from dotenv import load_dotenv
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -12,13 +11,13 @@ load_dotenv()
 
 DATABASE_URL = (
 
-    st.secrets.get(
+    st.secrets["DATABASE_URL"]
 
-        "DATABASE_URL"
+    if "DATABASE_URL"
 
-    )
+    in st.secrets
 
-    or
+    else
 
     os.getenv(
 
@@ -43,7 +42,10 @@ engine = create_engine(
     },
 
 
-    pool_pre_ping=True
+    pool_pre_ping=True,
+
+
+    pool_recycle=300
 
 )
 
