@@ -1,7 +1,7 @@
 import jwt
 import datetime
 import os
-
+import streamlit as st
 from dotenv import load_dotenv
 
 
@@ -9,6 +9,14 @@ load_dotenv()
 
 
 SECRET = (
+
+    st.secrets.get(
+
+        "JWT_SECRET"
+
+    )
+
+    or
 
     os.getenv(
 
