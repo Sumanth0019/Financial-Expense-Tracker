@@ -1,44 +1,53 @@
-import os
 import streamlit as st
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 
 DATABASE_URL = st.secrets["DATABASE_URL"]
 
+print("DATABASE URL loaded:", DATABASE_URL[:30], "...")
 
-# IMPORTANT:
-DATABASE_URL = DATABASE_URL.replace(
+try:
 
-    "postgresql://",
+    engine = create_engine(
 
-    "postgresql+psycopg2://",
+        DATABASE_URL,
 
-    1
+        connect_args={
 
-)
+            "sslmode":
 
+            "require"
 
-engine = create_engine(
+        },
 
-    DATABASE_URL,
+        pool_pre_ping=True
 
-
-    connect_args={
-
-        "sslmode":
-
-        "require"
-
-    },
+    )
 
 
-    pool_pre_ping=True,
+    conn = engine.connect()
 
-    pool_recycle=300
+    print(
 
-)
+        "DB CONNECTED SUCCESSFULLY"
+
+    )
+
+    conn.close()
+
+
+except Exception as e:
+
+    print(
+
+        "REAL DB ERROR:",
+
+        repr(e)
+
+    )
+
+    raise
 
 
 SessionLocal = sessionmaker(
