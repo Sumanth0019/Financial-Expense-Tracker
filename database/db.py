@@ -28,10 +28,11 @@ DATABASE_URL = (
 )
 
 
+print("DATABASE_URL exists:", DATABASE_URL is not None)
+
 engine = create_engine(
 
     DATABASE_URL,
-
 
     connect_args={
 
@@ -41,9 +42,7 @@ engine = create_engine(
 
     },
 
-
     pool_pre_ping=True,
-
 
     pool_recycle=300
 
