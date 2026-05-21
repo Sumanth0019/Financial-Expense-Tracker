@@ -1,0 +1,15 @@
+streamlit
+sqlalchemy
+psycopg2-binary
+python-dotenv
+PyJWT
+bcrypt
+pandas
+numpy
+plotly
+joblib
+scikit-learn
+streamlit-oauth
+requests
+APScheduler
+supabase
