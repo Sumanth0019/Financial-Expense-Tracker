@@ -1,6 +1,6 @@
 import os
 import requests
-
+import streamlit as st
 from dotenv import load_dotenv
 
 from streamlit_oauth import (
@@ -15,6 +15,14 @@ load_dotenv()
 
 CLIENT_ID = (
 
+    st.secrets.get(
+
+        "GOOGLE_CLIENT_ID"
+
+    )
+
+    or
+
     os.getenv(
 
         "GOOGLE_CLIENT_ID"
@@ -25,6 +33,14 @@ CLIENT_ID = (
 
 
 CLIENT_SECRET = (
+
+    st.secrets.get(
+
+        "GOOGLE_CLIENT_SECRET"
+
+    )
+
+    or
 
     os.getenv(
 
