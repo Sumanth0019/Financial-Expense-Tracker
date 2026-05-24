@@ -1,46 +1,76 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import datetime
 import joblib
 
-from utils.expense import (
-    add_expense,
-    get_expenses
-)
-
-from utils.charts import (
-    category_chart,
-    trend_chart
-)
-
-from utils.email_report import (
-    send_email,
-    create_monthly_report
-)
-
-from utils.styles import (
-    load_css
-)
-
-from ml.forecast_predict import (
-
-    predict_next_month
-
-)
-
+from utils.expense import add_expense, get_expenses
+from utils.charts import category_chart, trend_chart
+from utils.email_report import send_email, create_monthly_report
+from utils.styles import load_css
+from ml.forecast_predict import predict_next_month
 from database.db import SessionLocal
 from database.models import User
 
 
-model = joblib.load(
-    "ml/model.pkl"
-)
+model = joblib.load("ml/model.pkl")
 
 
 def dashboard():
 
     load_css()
+
+    username = st.session_state["username"]
+
+    expenses = get_expenses(username)
+
+    total = sum(e.amount for e in expenses)
+
+    forecast = predict_next_month([total]) or 0
+
+
+    db = SessionLocal()
+
+    user = (
+
+        db.query(User)
+
+        .filter(
+
+            User.username == username
+
+        )
+
+        .first()
+
+    )
+
+    user_email = user.email if user else ""
+
+
+    hour = datetime.datetime.now().hour
+
+    greeting = (
+
+        "Morning"
+
+        if hour < 12
+
+        else
+
+        "Afternoon"
+
+        if hour < 18
+
+        else
+
+        "Evening"
+
+    )
+
+
+    # =========================
+    # HERO
+    # =========================
 
     st.markdown(
 
@@ -50,9 +80,12 @@ def dashboard():
 
     <h1>
 
-    Financial Expense Tracker
+     Good {greeting},
+
+    {username}
 
     </h1>
+
 
 
 
@@ -64,221 +97,349 @@ def dashboard():
 
     )
 
-    if "warning_sent" not in st.session_state:
 
-        st.session_state[
-            "warning_sent"
-        ] = False
-
-
-    if "exceeded_sent" not in st.session_state:
-
-        st.session_state[
-            "exceeded_sent"
-        ] = False
+    # =========================
+    # METRICS
+    # =========================
 
 
-    current_month = (
+    c1, c2, c3, c4 = st.columns(4)
 
-        datetime.datetime.now()
 
-        .month
+    c1.metric(
+
+        "💸 Total Spent",
+
+        f"₹{total:.0f}"
 
     )
 
 
-    if (
+    c2.metric(
 
-        "last_month"
+        "🔮 Prediction",
 
-        not in st.session_state
+        f"₹{forecast:.0f}"
+
+    )
+
+
+    c3.metric(
+
+        "🧾 Expenses",
+
+        len(expenses)
+
+    )
+
+
+    avg = (
+
+        total /
+
+        max(
+
+            len(expenses),
+
+            1
+
+        )
+
+    )
+
+
+    c4.metric(
+
+        "📊 Avg",
+
+        f"₹{avg:.0f}"
+
+    )
+
+
+    st.divider()
+
+
+    # =========================
+    # ADD EXPENSE
+    # =========================
+
+
+    with st.container(
+
+        border=True
 
     ):
 
-        st.session_state[
-            "last_month"
-        ] = current_month
+
+        st.subheader(
+
+            "➕ Add Expense"
+
+        )
 
 
-    if (
-
-        st.session_state[
-            "last_month"
-        ]
-
-        != current_month
-
-    ):
+        col1, col2, col3 = st.columns(3)
 
 
-        st.session_state[
-            "warning_sent"
-        ] = False
+        amount = (
+
+            col1.number_input(
+
+                "Amount",
+
+                min_value=0.0
+
+            )
+
+        )
 
 
-        st.session_state[
-            "exceeded_sent"
-        ] = False
+        category = (
+
+            col2.selectbox(
+
+                "Category",
+
+                [
+
+                    "Food",
+
+                    "Travel",
+
+                    "Shopping",
+
+                    "Bills",
+
+                    "Other"
+
+                ]
+
+            )
+
+        )
 
 
-        st.session_state[
-            "last_month"
-        ] = current_month
+        description = (
+
+            col3.text_input(
+
+                "Description"
+
+            )
+
+        )
 
 
-    username = (
+        if st.button(
 
-        st.session_state[
-            "username"
-        ]
+            "Save Expense",
 
-    )
+            width="stretch"
 
-
-    st.title(
-
-        f"Welcome {username} 👋"
-
-    )
+        ):
 
 
-    amount = st.number_input(
+            add_expense(
 
-        "Amount",
+                username,
 
-        min_value=0.0
+                amount,
 
-    )
+                category,
+
+                description
+
+            )
 
 
-    category = st.selectbox(
+            st.success(
 
-        "Category",
+                "Expense Added"
+
+            )
+
+
+            st.rerun()
+
+
+
+    # =========================
+    # CHARTS + BUDGET
+    # =========================
+
+
+    left, right = st.columns(
 
         [
 
-            "Food",
+            2,
 
-            "Travel",
-
-            "Shopping",
-
-            "Bills",
-
-            "Other"
+            1
 
         ]
 
     )
 
 
-    description = st.text_input(
-
-        "Description"
-
-    )
+    with left:
 
 
-    if st.button(
+        pie = category_chart(
 
-        "Add Expense"
-
-    ):
-
-
-        add_expense(
-
-            username,
-
-            amount,
-
-            category,
-
-            description
+            expenses
 
         )
 
 
-        st.success(
-
-            "Expense Added "
-
-        )
+        if pie:
 
 
-    expenses = get_expenses(
+            st.plotly_chart(
 
-        username
+                pie,
 
-    )
-
-
-    total = sum(
-
-        e.amount
-
-        for e in expenses
-
-    )
-
-
-    monthly_totals = [
-
-        total
-
-    ]
-
-
-    forecast = (
-
-        predict_next_month(
-
-            monthly_totals
-
-        )
-
-    )
-
-
-    if forecast is not None:
-
-        with st.container(border=True):
-
-            st.metric(
-
-                " Predicted Next Month Spending",
-
-                f"₹{forecast:.0f}"
+                width="stretch"
 
             )
 
-            st.caption(
 
-                "Estimated from spending history"
+        trend = trend_chart(
 
-            )
-
-    db = SessionLocal()
-
-
-    user = (
-
-        db.query(User)
-
-        .filter(
-
-            User.username ==
-
-            username
+            expenses
 
         )
 
-        .first()
 
-    )
+        if trend:
 
 
-    user_email = user.email
+            st.plotly_chart(
+
+                trend,
+
+                width="stretch"
+
+            )
+
+
+
+    with right:
+
+
+        st.subheader(
+
+            "Budget"
+
+        )
+
+
+        budget = (
+
+            st.number_input(
+
+                "Monthly Budget",
+
+                value=10000.0
+
+            )
+
+        )
+
+
+        progress = (
+
+            total /
+
+            max(
+
+                budget,
+
+                1
+
+            )
+
+        )
+
+
+        st.progress(
+
+            min(
+
+                progress,
+
+                1.0
+
+            )
+
+        )
+
+
+        remaining = (
+
+            budget -
+
+            total
+
+        )
+
+
+        st.metric(
+
+            "Remaining",
+
+            f"₹{remaining:.0f}"
+
+        )
+
+
+        if progress >= 0.8:
+
+
+            st.warning(
+
+                "⚠ 80% budget used"
+
+            )
+
+
+        if total > budget:
+
+
+            st.error(
+
+                "🚨 Budget exceeded"
+
+            )
+
+
+            send_email(
+
+                user_email,
+
+                "Budget Alert",
+
+                create_monthly_report(
+
+                    username,
+
+                    total,
+
+                    budget,
+
+                    remaining,
+
+                    forecast
+
+                )
+
+            )
+
+
+
+    # =========================
+    # TABLE
+    # =========================
 
 
     st.subheader(
@@ -288,455 +449,50 @@ def dashboard():
     )
 
 
-    for e in reversed(
+    df = pd.DataFrame(
 
-        expenses
+        [
 
-    ):
+            {
 
+                "Category":
 
-        col1, col2, col3 = st.columns(
+                e.category,
 
-        [2,1,2]
-        )
+                "Amount":
 
+                e.amount,
 
-        with col1:
+                "Description":
 
+                e.description
 
-            st.markdown(
+            }
 
-                f"""
+            for e in expenses
 
-                ### {e.category}
-
-                """
-
-            )
-
-
-        with col2:
-
-
-            st.metric(
-
-                "Amount",
-
-                f"₹{e.amount:.0f}"
-
-            )
-
-
-        with col3:
-
-
-            st.markdown(
-
-                f"""
-
-                **Note**
-
-                {e.description
-
-                if e.description
-
-                else "No description"}
-
-                """
-
-            )
-
-
-    st.divider()
-
-
-    pie = category_chart(
-        expenses
-    )
-
-
-    if pie:
-
-        st.plotly_chart(
-            pie,
-            use_container_width=True
-        )
-
-
-    bar = trend_chart(
-        expenses
-    )
-
-
-    if bar:
-
-        st.plotly_chart(
-            bar,
-            use_container_width=True
-        )
-
-
-    st.subheader(
-
-        "Budget Tracker"
+        ]
 
     )
 
 
-    budget = st.number_input(
-
-        "Monthly Budget",
+    if len(df):
 
 
-        value=10000.0
+        st.dataframe(
 
-    )
+            df,
 
-
-    total = sum(
-
-        e.amount
-
-        for e in expenses
-
-    )
-
-
-    remaining = (
-
-        budget -
-
-        total
-
-    )
-
-
-    progress = (
-
-        total /
-
-        budget
-
-        if budget > 0
-
-        else 0
-
-    )
-
-
-    saved = (
-
-        budget -
-
-        total
-
-    )
-
-
-    col1, col2, col3 = st.columns(3)
-
-
-    with col1:
-
-        st.metric(
-
-            " Total Spent",
-
-            f"₹{total:.2f}"
+            width="stretch"
 
         )
 
 
-    with col2:
 
-        st.metric(
+    # =========================
+    # REPORT MAIL
+    # =========================
 
-            "Remaining",
-
-            f"₹{remaining:.2f}"
-
-        )
-
-
-    with col3:
-
-        st.metric(
-
-            "Budget",
-
-            f"₹{budget:.2f}"
-
-        )
-
-
-    st.progress(
-
-        min(
-
-            progress,
-
-            1.0
-
-        )
-
-    )
-
-
-    prediction = 0
-
-
-    # =====================
-    # 80% Warning
-    # =====================
-
-    if progress >= 0.8:
-
-
-        st.warning(
-
-            "⚠ Used 80% budget"
-
-        )
-
-
-        if (
-
-            not st.session_state[
-
-                "warning_sent"
-
-            ]
-
-        ):
-
-
-            monthly_report = (
-
-                create_monthly_report(
-
-                    username,
-
-                    total,
-
-                    budget,
-
-                    saved,
-
-                    prediction
-
-                )
-
-            )
-
-
-            success = (
-
-                send_email(
-
-                    recipient=
-
-                    user_email,
-
-
-                    subject=
-
-                    "⚠ Budget Warning",
-
-
-                    message=
-
-                    monthly_report
-
-                )
-
-            )
-
-
-            if success:
-
-
-                st.session_state[
-
-                    "warning_sent"
-
-                ] = True
-
-
-                st.success(
-
-                    "Warning mail sent"
-
-                )
-
-
-            else:
-
-
-                st.error(
-
-                    "Mail failed"
-
-                )
-
-
-
-    # =====================
-    # Budget Exceeded
-    # =====================
-
-    if total > budget:
-
-
-        st.error(
-
-            "🚨 Budget exceeded"
-
-        )
-
-
-        if (
-
-            not st.session_state[
-
-                "exceeded_sent"
-
-            ]
-
-        ):
-
-
-            monthly_report = (
-
-                create_monthly_report(
-
-                    username,
-
-                    total,
-
-                    budget,
-
-                    saved,
-
-                    prediction
-
-                )
-
-            )
-
-
-            success = (
-
-                send_email(
-
-                    recipient=
-
-                    user_email,
-
-
-                    subject=
-
-                    "🚨 Budget Exceeded Alert",
-
-
-                    message=
-
-                    monthly_report
-
-                )
-
-            )
-
-
-            if success:
-
-
-                st.session_state[
-
-                    "exceeded_sent"
-
-                ] = True
-
-
-                st.success(
-
-                    "Budget alert mail sent"
-
-                )
-
-
-            else:
-
-
-                st.error(
-
-                    "Mail failed"
-
-                )
-
-    if saved > 0:
-
-        st.success(
-
-            f"You saved ₹{saved:.2f}"
-
-        )
-
-    else:
-
-        st.error(
-
-            f"Overspent ₹{abs(saved):.2f}"
-
-        )
-
-
-    df = pd.DataFrame([
-
-        {
-
-            "Category":
-
-            e.category,
-
-            "Amount":
-
-            e.amount
-
-        }
-
-        for e in expenses
-
-    ])
-
-
-    if len(df) > 0:
-
-
-        top = (
-
-            df.groupby(
-
-                "Category"
-
-            )
-
-            ["Amount"]
-
-            .sum()
-
-            .idxmax()
-
-        )
-
-
-        st.info(
-
-            f"Highest spending: {top}"
-
-        )
-
-
-    
 
     st.subheader(
 
@@ -745,9 +501,9 @@ def dashboard():
     )
 
 
-    email = st.text_input(
+    recipient = st.text_input(
 
-        "Email"
+        "Recipient"
 
     )
 
@@ -759,7 +515,7 @@ def dashboard():
     ):
 
 
-        monthly_report = (
+        report = (
 
             create_monthly_report(
 
@@ -769,9 +525,9 @@ def dashboard():
 
                 budget,
 
-                saved,
+                remaining,
 
-                prediction
+                forecast
 
             )
 
@@ -780,26 +536,18 @@ def dashboard():
 
         send_email(
 
-            recipient=
+            recipient,
 
-            email,
+            "Expense Report",
 
-
-            subject=
-
-            "📊 Monthly Expense Report",
-
-
-            message=
-
-            monthly_report
+            report
 
         )
 
 
         st.success(
 
-            "Email sent "
+            "Report Sent"
 
         )
 
