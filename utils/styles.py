@@ -8,7 +8,7 @@ def load_css():
         <style>
 
         /* ==========================
-           APP BACKGROUND
+           MAIN APP
         ========================== */
 
         .stApp{
@@ -16,13 +16,12 @@ def load_css():
             background:
             linear-gradient(
                 135deg,
-                #0f172a,
-                #1e293b,
-                #312e81
+                #0f172a 0%,
+                #1e293b 40%,
+                #312e81 100%
             );
 
-            color:
-            white;
+            color:white;
 
         }
 
@@ -55,15 +54,14 @@ def load_css():
         section[data-testid="stSidebar"] *{
 
             color:
-            white
-            !important;
+            white !important;
 
         }
 
 
 
         /* ==========================
-           HERO
+           HERO SECTION
         ========================== */
 
         .hero{
@@ -119,6 +117,9 @@ def load_css():
                 .85
             );
 
+            font-size:
+            18px;
+
         }
 
 
@@ -134,7 +135,7 @@ def load_css():
                 255,
                 255,
                 255,
-                .06
+                .07
             );
 
             backdrop-filter:
@@ -149,13 +150,13 @@ def load_css():
             );
 
             border-radius:
-            22px;
+            24px;
 
             padding:
             22px;
 
             box-shadow:
-            0 8px 30px rgba(
+            0 8px 25px rgba(
                 0,
                 0,
                 0,
@@ -176,6 +177,9 @@ def load_css():
         }
 
 
+
+        /* LABEL */
+
         [data-testid="stMetricLabel"]{
 
             color:
@@ -183,13 +187,19 @@ def load_css():
                 255,
                 255,
                 255,
-                .75
+                .80
             )
+            !important;
+
+            font-size:
+            15px
             !important;
 
         }
 
 
+
+        /* VALUE */
 
         [data-testid="stMetricValue"]{
 
@@ -209,117 +219,59 @@ def load_css():
 
 
 
+        /* DELTA */
+
+        [data-testid="stMetricDelta"]{
+
+            color:
+            #22c55e
+            !important;
+
+        }
+
+
+
         /* ==========================
-           INPUTS (FIXED)
+           BUTTONS
         ========================== */
 
-
-        .stTextInput input,
-        .stNumberInput input{
+        .stButton > button{
 
             background:
-            rgba(
-                17,
-                24,
-                39,
-                .85
-            )
-            !important;
-
+            linear-gradient(
+                90deg,
+                #2563eb,
+                #7c3aed
+            );
 
             color:
-            white
-            !important;
-
+            white;
 
             border:
-            1px solid rgba(
-                255,
-                255,
-                255,
-                .08
-            )
-            !important;
-
+            none;
 
             border-radius:
-            14px
-            !important;
+            16px;
+
+            padding:
+            12px;
+
+            font-weight:
+            700;
+
+            transition:
+            .25s;
 
         }
 
 
+        .stButton > button:hover{
 
-        .stTextInput input::placeholder,
-        .stNumberInput input::placeholder{
-
-            color:
-            rgba(
-                255,
-                255,
-                255,
-                .45
-            )
-            !important;
-
-        }
-
-
-
-        .stNumberInput button{
-
-            background:
-            transparent
-            !important;
-
-
-            color:
-            white
-            !important;
-
-        }
-
-
-
-        div[data-baseweb="select"]{
-
-            background:
-            rgba(
-                17,
-                24,
-                39,
-                .85
-            )
-            !important;
-
-
-            border-radius:
-            14px
-            !important;
-
-        }
-
-
-
-        div[data-baseweb="select"] *{
-
-            color:
-            white
-            !important;
-
-        }
-
-
-
-        input:focus{
-
-            border:
-            1px solid #7c3aed
-            !important;
-
+            transform:
+            scale(1.03);
 
             box-shadow:
-            0 0 12px rgba(
+            0 10px 25px rgba(
                 124,
                 58,
                 237,
@@ -331,60 +283,50 @@ def load_css():
 
 
         /* ==========================
-           BUTTONS
+           INPUTS
         ========================== */
 
-
-        .stButton > button{
+        .stTextInput input,
+        .stNumberInput input{
 
             background:
-            linear-gradient(
-                90deg,
-                #2563eb,
-                #7c3aed
+            rgba(
+                255,
+                255,
+                255,
+                .06
             );
-
 
             color:
             white;
 
+            border-radius:
+            14px;
 
             border:
-            none;
-
-
-            border-radius:
-            16px;
-
-
-            padding:
-            12px;
-
-
-            font-weight:
-            700;
-
-
-            transition:
-            .25s;
+            1px solid rgba(
+                255,
+                255,
+                255,
+                .08
+            );
 
         }
 
 
 
-        .stButton > button:hover{
+        div[data-baseweb="select"]{
 
-            transform:
-            scale(1.03);
-
-
-            box-shadow:
-            0 10px 25px rgba(
-                124,
-                58,
-                237,
-                .35
+            background:
+            rgba(
+                255,
+                255,
+                255,
+                .06
             );
+
+            border-radius:
+            14px;
 
         }
 
@@ -393,7 +335,6 @@ def load_css():
         /* ==========================
            TABLES
         ========================== */
-
 
         [data-testid="stDataFrame"]{
 
@@ -405,9 +346,11 @@ def load_css():
                 .04
             );
 
-
             border-radius:
             20px;
+
+            overflow:
+            hidden;
 
         }
 
@@ -416,7 +359,6 @@ def load_css():
         /* ==========================
            CHARTS
         ========================== */
-
 
         .js-plotly-plot{
 
@@ -428,69 +370,19 @@ def load_css():
                 .03
             );
 
-
             border-radius:
             24px;
 
-
             padding:
-            10px;
+            12px;
 
         }
 
 
 
         /* ==========================
-           ALERTS
+           PROGRESS BAR
         ========================== */
-
-
-        .stSuccess{
-
-            background:
-            rgba(
-                34,
-                197,
-                94,
-                .12
-            );
-
-        }
-
-
-
-        .stWarning{
-
-            background:
-            rgba(
-                245,
-                158,
-                11,
-                .12
-            );
-
-        }
-
-
-
-        .stError{
-
-            background:
-            rgba(
-                239,
-                68,
-                68,
-                .12
-            );
-
-        }
-
-
-
-        /* ==========================
-           PROGRESS
-        ========================== */
-
 
         .stProgress > div > div{
 
@@ -506,9 +398,52 @@ def load_css():
 
 
         /* ==========================
-           HEADINGS
+           ALERTS
         ========================== */
 
+        .stSuccess{
+
+            background:
+            rgba(
+                34,
+                197,
+                94,
+                .15
+            );
+
+        }
+
+
+        .stWarning{
+
+            background:
+            rgba(
+                245,
+                158,
+                11,
+                .15
+            );
+
+        }
+
+
+        .stError{
+
+            background:
+            rgba(
+                239,
+                68,
+                68,
+                .15
+            );
+
+        }
+
+
+
+        /* ==========================
+           HEADINGS
+        ========================== */
 
         h1{
 
@@ -516,7 +451,6 @@ def load_css():
             white;
 
         }
-
 
 
         h2{
@@ -527,13 +461,13 @@ def load_css():
         }
 
 
-
         h3{
 
             color:
             #93c5fd;
 
         }
+
 
 
         </style>
