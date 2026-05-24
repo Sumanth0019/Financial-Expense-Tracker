@@ -316,36 +316,110 @@ def load_css():
 
         }
 
-
-
         div[data-baseweb="select"]{
 
             background:
-            rgba(
-                17,
-                24,
-                39,
-                .85
+
+            #111827
+
+            !important;
+
+
+            border:
+
+            1px solid rgba(
+
+                255,
+
+                255,
+
+                255,
+
+                .08
+
             )
+
             !important;
 
 
             border-radius:
+
             14px
+
             !important;
 
         }
 
 
+        /* Selected text */
 
-        div[data-baseweb="select"] *{
+        div[data-baseweb="select"] span{
 
             color:
+
             white
+
             !important;
 
         }
 
+
+        /* Dropdown arrow */
+
+        div[data-baseweb="select"] svg{
+
+            fill:
+
+            white
+
+            !important;
+
+        }
+
+
+        /* Dropdown menu */
+
+        ul[role="listbox"]{
+
+            background:
+
+            #111827
+
+            !important;
+
+        }
+
+
+        /* Dropdown options */
+
+        ul[role="listbox"] li{
+
+            color:
+
+            white
+
+            !important;
+
+            background:
+
+            #111827
+
+            !important;
+
+        }
+
+
+        /* Hover option */
+
+        ul[role="listbox"] li:hover{
+
+            background:
+
+            #2563eb
+
+            !important;
+
+        }
 
 
         input:focus{
