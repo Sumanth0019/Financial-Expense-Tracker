@@ -8,7 +8,7 @@ def load_css():
         <style>
 
         /* ==========================
-           MAIN APP
+           APP BACKGROUND
         ========================== */
 
         .stApp{
@@ -16,9 +16,9 @@ def load_css():
             background:
             linear-gradient(
                 135deg,
-                #0f172a 0%,
-                #1e293b 40%,
-                #312e81 100%
+                #0f172a,
+                #1e293b,
+                #312e81
             );
 
             color:white;
@@ -54,14 +54,15 @@ def load_css():
         section[data-testid="stSidebar"] *{
 
             color:
-            white !important;
+            white
+            !important;
 
         }
 
 
 
         /* ==========================
-           HERO SECTION
+           HERO
         ========================== */
 
         .hero{
@@ -117,9 +118,6 @@ def load_css():
                 .85
             );
 
-            font-size:
-            18px;
-
         }
 
 
@@ -135,7 +133,7 @@ def load_css():
                 255,
                 255,
                 255,
-                .07
+                .06
             );
 
             backdrop-filter:
@@ -150,13 +148,13 @@ def load_css():
             );
 
             border-radius:
-            24px;
+            22px;
 
             padding:
             22px;
 
             box-shadow:
-            0 8px 25px rgba(
+            0 8px 30px rgba(
                 0,
                 0,
                 0,
@@ -177,9 +175,6 @@ def load_css():
         }
 
 
-
-        /* LABEL */
-
         [data-testid="stMetricLabel"]{
 
             color:
@@ -187,19 +182,13 @@ def load_css():
                 255,
                 255,
                 255,
-                .80
+                .75
             )
-            !important;
-
-            font-size:
-            15px
             !important;
 
         }
 
 
-
-        /* VALUE */
 
         [data-testid="stMetricValue"]{
 
@@ -219,12 +208,38 @@ def load_css():
 
 
 
-        /* DELTA */
+        /* ==========================
+           INPUT LABELS (FIXED)
+        ========================== */
 
-        [data-testid="stMetricDelta"]{
+        .stTextInput label,
+        .stNumberInput label,
+        .stSelectbox label,
+        .stTextArea label{
 
             color:
-            #22c55e
+
+            rgba(
+                255,
+                255,
+                255,
+                0.90
+            )
+
+            !important;
+
+
+            font-size:
+
+            16px
+
+            !important;
+
+
+            font-weight:
+
+            600
+
             !important;
 
         }
@@ -232,46 +247,116 @@ def load_css():
 
 
         /* ==========================
-           BUTTONS
+           INPUTS
         ========================== */
 
-        .stButton > button{
+
+        .stTextInput input,
+        .stNumberInput input{
 
             background:
-            linear-gradient(
-                90deg,
-                #2563eb,
-                #7c3aed
-            );
+            rgba(
+                17,
+                24,
+                39,
+                .85
+            )
+            !important;
+
 
             color:
-            white;
+            white
+            !important;
+
 
             border:
-            none;
+            1px solid rgba(
+                255,
+                255,
+                255,
+                .08
+            )
+            !important;
+
 
             border-radius:
-            16px;
-
-            padding:
-            12px;
-
-            font-weight:
-            700;
-
-            transition:
-            .25s;
+            14px
+            !important;
 
         }
 
 
-        .stButton > button:hover{
 
-            transform:
-            scale(1.03);
+        .stTextInput input::placeholder,
+        .stNumberInput input::placeholder{
+
+            color:
+            rgba(
+                255,
+                255,
+                255,
+                .45
+            )
+            !important;
+
+        }
+
+
+
+        .stNumberInput button{
+
+            background:
+            transparent
+            !important;
+
+
+            color:
+            white
+            !important;
+
+        }
+
+
+
+        div[data-baseweb="select"]{
+
+            background:
+            rgba(
+                17,
+                24,
+                39,
+                .85
+            )
+            !important;
+
+
+            border-radius:
+            14px
+            !important;
+
+        }
+
+
+
+        div[data-baseweb="select"] *{
+
+            color:
+            white
+            !important;
+
+        }
+
+
+
+        input:focus{
+
+            border:
+            1px solid #7c3aed
+            !important;
+
 
             box-shadow:
-            0 10px 25px rgba(
+            0 0 12px rgba(
                 124,
                 58,
                 237,
@@ -283,50 +368,60 @@ def load_css():
 
 
         /* ==========================
-           INPUTS
+           BUTTONS
         ========================== */
 
-        .stTextInput input,
-        .stNumberInput input{
+
+        .stButton > button{
 
             background:
-            rgba(
-                255,
-                255,
-                255,
-                .06
+            linear-gradient(
+                90deg,
+                #2563eb,
+                #7c3aed
             );
+
 
             color:
             white;
 
-            border-radius:
-            14px;
 
             border:
-            1px solid rgba(
-                255,
-                255,
-                255,
-                .08
-            );
+            none;
+
+
+            border-radius:
+            16px;
+
+
+            padding:
+            12px;
+
+
+            font-weight:
+            700;
+
+
+            transition:
+            .25s;
 
         }
 
 
 
-        div[data-baseweb="select"]{
+        .stButton > button:hover{
 
-            background:
-            rgba(
-                255,
-                255,
-                255,
-                .06
+            transform:
+            scale(1.03);
+
+
+            box-shadow:
+            0 10px 25px rgba(
+                124,
+                58,
+                237,
+                .35
             );
-
-            border-radius:
-            14px;
 
         }
 
@@ -335,6 +430,7 @@ def load_css():
         /* ==========================
            TABLES
         ========================== */
+
 
         [data-testid="stDataFrame"]{
 
@@ -346,11 +442,9 @@ def load_css():
                 .04
             );
 
+
             border-radius:
             20px;
-
-            overflow:
-            hidden;
 
         }
 
@@ -359,6 +453,7 @@ def load_css():
         /* ==========================
            CHARTS
         ========================== */
+
 
         .js-plotly-plot{
 
@@ -370,19 +465,69 @@ def load_css():
                 .03
             );
 
+
             border-radius:
             24px;
 
+
             padding:
-            12px;
+            10px;
 
         }
 
 
 
         /* ==========================
-           PROGRESS BAR
+           ALERTS
         ========================== */
+
+
+        .stSuccess{
+
+            background:
+            rgba(
+                34,
+                197,
+                94,
+                .12
+            );
+
+        }
+
+
+
+        .stWarning{
+
+            background:
+            rgba(
+                245,
+                158,
+                11,
+                .12
+            );
+
+        }
+
+
+
+        .stError{
+
+            background:
+            rgba(
+                239,
+                68,
+                68,
+                .12
+            );
+
+        }
+
+
+
+        /* ==========================
+           PROGRESS
+        ========================== */
+
 
         .stProgress > div > div{
 
@@ -398,52 +543,9 @@ def load_css():
 
 
         /* ==========================
-           ALERTS
-        ========================== */
-
-        .stSuccess{
-
-            background:
-            rgba(
-                34,
-                197,
-                94,
-                .15
-            );
-
-        }
-
-
-        .stWarning{
-
-            background:
-            rgba(
-                245,
-                158,
-                11,
-                .15
-            );
-
-        }
-
-
-        .stError{
-
-            background:
-            rgba(
-                239,
-                68,
-                68,
-                .15
-            );
-
-        }
-
-
-
-        /* ==========================
            HEADINGS
         ========================== */
+
 
         h1{
 
@@ -451,6 +553,7 @@ def load_css():
             white;
 
         }
+
 
 
         h2{
@@ -461,13 +564,13 @@ def load_css():
         }
 
 
+
         h3{
 
             color:
             #93c5fd;
 
         }
-
 
 
         </style>
